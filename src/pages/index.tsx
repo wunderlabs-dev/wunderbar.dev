@@ -9,9 +9,11 @@ const Home = () => {
         <title>{copy.metadata.title}</title>
       </Head>
 
-      <main>
-        <h1>Home</h1>
-      </main>
+      <div className="min-h-screen">
+        <main>
+          <h1>Home</h1>
+        </main>
+      </div>
     </>
   );
 };
