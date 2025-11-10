@@ -34,7 +34,12 @@ const HomeWindow = ({ position }: HomeWindowProps) => {
         }}
         className="absolute bg-beige-100 outline outline-blue-400"
       >
-        <div className="bg-beige-100 outline outline-blue-400">
+        <div
+          className={cn(
+            "bg-beige-100 outline outline-blue-400 w-window flex flex-col",
+            size === "ENLARGED" ? "h-window-2xl" : "h-window"
+          )}
+        >
           <HomeWindowToolbar listeners={listeners} attributes={attributes} />
           <HomeWindowContent />
         </div>
