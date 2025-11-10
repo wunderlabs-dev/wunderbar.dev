@@ -20,16 +20,15 @@ const Button = ({ children, variant = "default", startAdornment, endAdornment, c
   return (
     <button
       className={cn(
-        "flex items-center justify-center",
+        "flex items-center justify-center cursor-pointer",
         variant === "default" ? "border border-blue-900" : "border-0",
-        "cursor-pointer",
         variant === "default" ? "hover:bg-blue-900 hover:text-white" : null,
         className
       )}
       {...props}
     >
       {startAdornment ? <div className="px-2 py-2">{startAdornment}</div> : null}
-      <span className={cn(variant === "default" ? "px-3 py-2" : null)}>{children}</span>
+      <span className={cn(variant === "default" ? "px-3" : null)}>{children}</span>
       {endAdornment ? <div className="px-2 py-2">{endAdornment}</div> : null}
     </button>
   );
