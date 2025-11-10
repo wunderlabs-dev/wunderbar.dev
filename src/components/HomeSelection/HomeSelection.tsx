@@ -5,10 +5,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useEventListener } from "usehooks-ts";
+import { useEventListener, useBoolean } from "usehooks-ts";
+
+import { cssToUnit } from "@/utils/helpers";
 
 const HomeSelection = () => {
-  const [isSelecting, setIsSelecting] = useState(false);
+  const isSelecting = useBoolean(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [currentPos, setCurrentPos] = useState({ x: 0, y: 0 });
 
@@ -17,28 +19,28 @@ const HomeSelection = () => {
     if (e.button !== 0) return;
     if ((e.target as HTMLElement).closest("[data-no-select]")) return;
 
-    setIsSelecting(true);
+    isSelecting.setTrue();
     setStartPos({ x: e.clientX, y: e.clientY });
     setCurrentPos({ x: e.clientX, y: e.clientY });
-  }, []);
+  }, [isSelecting]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isSelecting) return;
+      if (!isSelecting.value) return;
       setCurrentPos({ x: e.clientX, y: e.clientY });
     },
-    [isSelecting],
+    [isSelecting.value],
   );
 
   const handleMouseUp = useCallback(() => {
-    setIsSelecting(false);
-  }, []);
+    isSelecting.setFalse();
+  }, [isSelecting]);
 
   useEventListener("mousedown", handleMouseDown);
   useEventListener("mousemove", handleMouseMove);
   useEventListener("mouseup", handleMouseUp);
 
-  if (!isSelecting) return null;
+  if (!isSelecting.value) return null;
 
   const left = Math.min(startPos.x, currentPos.x);
   const top = Math.min(startPos.y, currentPos.y);
@@ -49,10 +51,10 @@ const HomeSelection = () => {
     <div
       className="fixed pointer-events-none border border-blue-400 bg-blue-400/20"
       style={{
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-        height: `${height}px`,
+        left: cssToUnit(left),
+        top: cssToUnit(top),
+        width: cssToUnit(width),
+        height: cssToUnit(height),
       }}
     />
   );
