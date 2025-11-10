@@ -39,11 +39,13 @@ const HomeWindow = () => {
             <HomeWindowDivider />
           </div>
 
-          <Button endAdornment={<SvgIconChat size="small" />}>
-            <Typography variant="body2" uppercase>
-              {t("toolbar.letsTalk")}
-            </Typography>
-          </Button>
+          <Link href={EMAIL_ADDRESS}>
+            <Button endAdornment={<SvgIconChat size="small" />}>
+              <Typography variant="body2" uppercase>
+                {t("toolbar.letsTalk")}
+              </Typography>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
