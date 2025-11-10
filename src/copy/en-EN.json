@@ -2,5 +2,16 @@
   "metadata": {
     "title": "Wunderlabs",
     "description": "Building the future"
+  },
+  "desktop": {
+    "folder": {
+      "wunder": "Wunder"
+    },
+    "window": {
+      "title": "Wunderlabs"
+    }
+  },
+  "toolbar": {
+    "letsTalk": "Let's talk !"
   }
 }

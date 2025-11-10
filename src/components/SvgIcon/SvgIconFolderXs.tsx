@@ -2,17 +2,17 @@ import { HTMLAttributes } from "react";
 
 import { SvgIcon, type SvgIconSize } from "@/components/SvgIcon";
 
-type SvgIconChatProps = {
+type SvgIconFolderXsProps = {
   size?: SvgIconSize;
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconChat = ({ className, size = "inherit", ...props }: SvgIconChatProps) => {
+const SvgIconFolderXs = ({ className, size = "inherit", ...props }: SvgIconFolderXsProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
-      <path d="M12 15H10V13H12V15ZM10 13H2V11H10V13ZM14 13H12V11H14V13ZM2 11H0V3H2V11ZM16 11H14V3H16V11ZM6 8H4V6H6V8ZM12 8H8V6H12V8ZM14 3H2V1H14V3Z" />
+      <path d="M14 13V15H2V13H14ZM2 9H4V7H14V5H10V3H16V13H14V9H4V11H2V13H0V3H2V9ZM10 3H2V1H10V3Z" />
     </SvgIcon>
   );
 };
 
-export default SvgIconChat;
+export default SvgIconFolderXs;

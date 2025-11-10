@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme inline {
+  /*
+   * Primary brand colors
+   * Blue palette shades
+   */
   --color-blue-900: #090d56;
   --color-blue-800: #3a3d78;
   --color-blue-600: #6b6e9a;
@@ -8,9 +12,17 @@
   --color-blue-200: #cecfdd;
   --color-blue-100: #e6e7ee;
 
+  /*
+   * Neutral warm tones
+   * Beige palette shades
+   */
   --color-beige-100: #f9f4eb;
   --color-beige-200: #f1e4cd;
 
+  /*
+   * Accent colors
+   * For highlights and states
+   */
   --color-green-500: #62bb47;
   --color-yellow-500: #fcb828;
   --color-orange-500: #f6821e;
@@ -18,8 +30,19 @@
   --color-purple-500: #963e97;
   --color-cyan-500: #009ddd;
 
+  /*
+   * Background textures
+   * Dither pattern image
+   */
   --background-image-dither: url(/images/bg-1@2x.png);
+}
 
-  --font-family-handjet: var(--font-handjet);
-  --font-family-space-grotesk: var(--font-space-grotesk);
+@layer utilities {
+  .font-handjet {
+    font-family: var(--font-handjet);
+  }
+
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk);
+  }
 }

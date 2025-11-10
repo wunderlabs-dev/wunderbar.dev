@@ -4,7 +4,7 @@ import copy from "@/copy/en-EN.json";
 
 const Document = () => {
   return (
-    <Html lang="en" className="scroll-smooth">
+    <Html lang="en" className="overscroll-none">
       <Head>
         <meta name="description" content={copy.metadata.description} />
         <meta name="twitter:title" content={copy.metadata.title} />
@@ -22,7 +22,7 @@ const Document = () => {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
       </Head>
 
-      <body className="bg-beige-100 bg-dither bg-blend-overlay bg-cover bg-center bg-no-repeat text-blue-900 antialiased">
+      <body className="bg-beige-100 bg-dither bg-blend-overlay bg-cover bg-center bg-no-repeat antialiased select-none overscroll-none">
         <Main />
         <NextScript />
       </body>

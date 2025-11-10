@@ -12,3 +12,5 @@ export const isNullOrUndefined = <T>(
 ): value is null | undefined => {
   return value === null || value === undefined;
 };
+
+export const ONE_SEC_IN_MS = 1000;

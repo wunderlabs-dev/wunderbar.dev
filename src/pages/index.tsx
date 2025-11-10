@@ -1,7 +1,9 @@
 import Head from "next/head";
+import type { GetStaticProps } from "next";
 
 import copy from "@/copy/en-EN.json";
 
+import { HomeDesktop } from "@/components/HomeDesktop";
 import { HomeToolbar } from "@/components/HomeToolbar";
 
 const Home = () => {
@@ -12,14 +14,19 @@ const Home = () => {
       </Head>
 
       <div className="flex flex-col min-h-screen">
-        <main className="flex-1">
-          <h1>Home</h1>
-        </main>
-
+        <HomeDesktop />
         <HomeToolbar />
       </div>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {
+      messages: copy,
+    },
+  };
 };
 
 export default Home;
