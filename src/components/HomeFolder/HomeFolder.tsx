@@ -23,6 +23,7 @@ const HomeFolder = () => {
   return (
     <div
       ref={ref}
+      data-no-select
       className="flex flex-col items-center justify-center gap-1 py-1 px-2 cursor-pointer"
       onClick={() => setState("OPEN")}
     >

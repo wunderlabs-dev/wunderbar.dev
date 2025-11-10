@@ -12,6 +12,7 @@ import { useWindowState } from "@/contexts/WindowProvider";
 import { INITIAL_WINDOW_POSITION_X, INITIAL_WINDOW_POSITION_Y, DROP_ANIMATION_DURATION } from "@/utils/const";
 
 import { HomeFolder } from "@/components/HomeFolder";
+import { HomeSelection } from "@/components/HomeSelection";
 import { HomeWindow } from "@/components/HomeWindow";
 import { HomeToolbar } from "@/components/HomeToolbar";
 
@@ -47,6 +48,7 @@ const Home = () => {
         </DndContext>
 
         <HomeToolbar />
+        <HomeSelection />
       </div>
     </>
   );
