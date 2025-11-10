@@ -38,7 +38,7 @@ const typographyVariantClassNames: TypographyVariantMapping = {
 
 const typographyColorClassNames: TypographyColorMapping = {
   inherit: "text-inherit",
-  muted: "text-blue-400",
+  muted: "text-blue-700",
 };
 
 const Typography = ({
