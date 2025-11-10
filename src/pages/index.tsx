@@ -25,10 +25,10 @@ const Home = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     setTimeout(() => {
-      setPosition({
-        x: position.x + event.delta.x,
-        y: position.y + event.delta.y,
-      });
+      setPosition((currentPosition) => ({
+        x: currentPosition.x + event.delta.x,
+        y: currentPosition.y + event.delta.y,
+      }));
     }, DROP_ANIMATION_DURATION);
   };
 
