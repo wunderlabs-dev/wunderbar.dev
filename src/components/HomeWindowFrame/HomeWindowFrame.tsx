@@ -28,7 +28,6 @@ const HomeWindowFrame = () => {
 
       <motion.div
         variants={frameClipPath.variants}
-        transition={frameClipPath.transition}
         className="bg-dialup h-32 w-52 bg-contain bg-no-repeat bg-blend-multiply"
       />
     </motion.div>
