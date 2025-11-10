@@ -3,6 +3,10 @@
  * ABOUTME: Contains reusable animation keyframe sequences for framer-motion
  */
 
+export const drop = {
+  duration: 0,
+};
+
 export const frame = {
   viewport: {
     once: true,

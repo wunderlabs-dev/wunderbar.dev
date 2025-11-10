@@ -1,5 +1,5 @@
 // ABOUTME: Utility functions for the application
-// ABOUTME: Includes className merging with Tailwind CSS conflict resolution
+// ABOUTME: Includes className merging, CSS object to string conversion, and type guards
 import cx from "classnames";
 import { twMerge } from "tailwind-merge";
 
@@ -9,4 +9,8 @@ export const cn = (...inputs: Parameters<typeof cx>) => {
 
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
   return value === null || value === undefined;
+};
+
+export const cssToUnit = (value: number, unit: "px" | "em" = "px"): string => {
+  return `${value}${unit}`;
 };

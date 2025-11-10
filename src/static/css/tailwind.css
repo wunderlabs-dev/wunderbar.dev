@@ -40,8 +40,11 @@
 }
 
 @layer utilities {
-  .max-h-window {
-    height: var(--container-md);
+  .w-window {
+    width: var(--container-xl);
+  }
+  .h-window {
+    height: var(--container-xl);
   }
   .font-handjet {
     font-family: var(--font-handjet);

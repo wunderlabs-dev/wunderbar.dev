@@ -3,17 +3,29 @@
  * ABOUTME: Contains window controls (expand, minimize, close)
  */
 import { useTranslations } from "next-intl";
+import type { DraggableAttributes } from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 import { SvgIconX, SvgIconExpand, SvgIconMinimize } from "@/components/SvgIcon";
 
 import { Button } from "@/components/Button";
 import { Typography } from "@/components/Typography";
 
-const HomeWindowToolbar = () => {
+type HomeWindowToolbarProps = {
+  attributes?: DraggableAttributes;
+  listeners?: SyntheticListenerMap;
+} & React.HTMLAttributes<HTMLDivElement>;
+
+const HomeWindowToolbar = ({ listeners, attributes, ...props }: HomeWindowToolbarProps) => {
   const t = useTranslations();
 
   return (
-    <div className="flex items-center justify-between pl-3 pr-1 py-1 bg-beige-200 outline outline-blue-400">
+    <div
+      {...props}
+      {...listeners}
+      {...attributes}
+      className="flex items-center justify-between pl-3 pr-1 py-1 bg-beige-200 outline outline-blue-400 cursor-grab"
+    >
       <Typography variant="caption" uppercase>
         {t("desktop.window.title")}
       </Typography>
