@@ -2,9 +2,10 @@
  * ABOUTME: Desktop window component
  * ABOUTME: Represents a window on the desktop
  */
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+
+import { EMAIL_ADDRESS } from "@/utils/const";
 
 import { Button } from "@/components/Button";
 import { Typography } from "@/components/Typography";
