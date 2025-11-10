@@ -8,8 +8,8 @@ import Marquee from "react-fast-marquee";
 
 import { MARQUEE_ITEMS } from "@/utils/const";
 
-import { Typography } from "@/components/Typography";
 import { SvgIconStar } from "@/components/SvgIcon";
+import { Typography } from "@/components/Typography";
 
 const HomeWindowMarquee = () => {
   const t = useTranslations();
