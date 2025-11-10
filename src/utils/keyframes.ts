@@ -8,6 +8,24 @@ export const drop = {
 };
 
 export const windowClipPath = {
+  initial: {
+    clipPath: "inset(0% 0% 100% 0%)",
+  },
+  animate: {
+    clipPath: [
+      "inset(0% 0% 100% 0%)",
+      "inset(0% 0% 100% 0%)",
+      "inset(0% 0% 66% 0%)",
+      "inset(0% 0% 66% 0%)",
+      "inset(0% 0% 33% 0%)",
+      "inset(0% 0% 33% 0%)",
+      "inset(0% 0% 0% 0%)",
+    ],
+    transition: {
+      duration: 0.15,
+      times: [0, 0.33, 0.34, 0.5, 0.51, 0.84, 1],
+    },
+  },
   exit: {
     clipPath: [
       "inset(0% 0% 0% 0%)",
@@ -17,10 +35,10 @@ export const windowClipPath = {
       "inset(66% 0% 0% 0%)",
       "inset(66% 0% 0% 0%)",
     ],
-  },
-  transition: {
-    duration: 0.15,
-    times: [0, 0.32, 0.33, 0.65, 0.66, 1],
+    transition: {
+      duration: 0.15,
+      times: [0, 0.33, 0.34, 0.66, 0.67, 1],
+    },
   },
 };
 
