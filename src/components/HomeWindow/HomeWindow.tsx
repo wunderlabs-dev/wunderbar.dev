@@ -8,7 +8,8 @@ import { useTranslations } from "next-intl";
 import { useDraggable, DragOverlay } from "@dnd-kit/core";
 
 import { drop } from "@/utils/keyframes";
-import { cssToUnit } from "@/utils/helpers";
+import { cn, cssToUnit } from "@/utils/helpers";
+import { useWindowState } from "@/contexts/WindowProvider";
 
 import { HomeWindowContent } from "@/components/HomeWindowContent";
 import { HomeWindowToolbar } from "@/components/HomeWindowToolbar";
@@ -20,9 +21,8 @@ export type HomeWindowProps = {
 const HomeWindow = ({ position }: HomeWindowProps) => {
   const t = useTranslations();
 
-  const { attributes, listeners, setNodeRef } = useDraggable({
-    id: t("desktop.window.title"),
-  });
+  const { size } = useWindowState();
+  const { attributes, listeners, setNodeRef } = useDraggable({ id: t("desktop.window.title") });
 
   return (
     <>
@@ -41,7 +41,7 @@ const HomeWindow = ({ position }: HomeWindowProps) => {
       </div>
 
       <DragOverlay dropAnimation={drop}>
-        <div className="border border-blue-400 w-window h-window" />
+        <div className={cn("border border-blue-400 w-window", size === "ENLARGED" ? "h-window-2xl" : "h-window")} />
       </DragOverlay>
     </>
   );

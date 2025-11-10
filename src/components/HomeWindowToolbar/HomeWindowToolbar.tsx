@@ -21,10 +21,18 @@ type HomeWindowToolbarProps = {
 const HomeWindowToolbar = ({ listeners, attributes }: HomeWindowToolbarProps) => {
   const t = useTranslations();
 
-  const { setState } = useWindowState();
+  const { size, setState, setSize } = useWindowState();
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  const handleSizeClick = () => {
+    if (size === "DEFAULT") {
+      setSize("ENLARGED");
+    } else {
+      setSize("DEFAULT");
+    }
   };
 
   return (
@@ -38,8 +46,8 @@ const HomeWindowToolbar = ({ listeners, attributes }: HomeWindowToolbarProps) =>
       </Typography>
 
       <div className="flex items-center gap-1" onPointerDown={handlePointerDown}>
-        <Button variant="transparent">
-          <SvgIconExpand size="small" />
+        <Button variant="transparent" onClick={handleSizeClick}>
+          {size === "DEFAULT" ? <SvgIconExpand size="small" /> : <SvgIconShrink size="small" />}
         </Button>
         <Button variant="transparent" onClick={() => setState("CLOSED")}>
           <SvgIconMinimize size="small" />
