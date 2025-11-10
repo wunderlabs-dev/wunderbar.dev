@@ -65,7 +65,7 @@ const Home = () => {
             )}
           </DndContext>
 
-          <HomeToolbar />
+          {md ? null : <HomeToolbar />}
         </div>
       ) : null}
     </>

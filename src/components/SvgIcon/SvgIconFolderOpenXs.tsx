@@ -2,21 +2,21 @@ import type { HTMLAttributes } from "react";
 
 import { SvgIcon, type SvgIconSize } from "@/components/SvgIcon";
 
-type SvgIconFolderXsProps = {
+type SvgIconFolderOpenXsProps = {
   size?: SvgIconSize;
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconFolderXs = ({
+const SvgIconFolderOpenXs = ({
   className,
   size = "inherit",
   ...props
-}: SvgIconFolderXsProps) => {
+}: SvgIconFolderOpenXsProps) => {
   return (
-    <SvgIcon className={className} size={size} viewBox="0 0 16 16" {...props}>
-      <path d="M14 13v2H2v-2h12ZM10 3h6v10h-2V5H4v2H2v6H0V3h2v2h2V3H2V1h8v2Z" />
+    <SvgIcon className={className} size={size} {...props}>
+      <path d="M14 13V15H2V13H14ZM2 9H4V7H14V5H10V3H16V13H14V9H4V11H2V13H0V3H2V9ZM10 3H2V1H10V3Z" />
     </SvgIcon>
   );
 };
 
-export default SvgIconFolderXs;
+export default SvgIconFolderOpenXs;
