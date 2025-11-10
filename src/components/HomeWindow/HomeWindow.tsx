@@ -3,9 +3,8 @@
  * ABOUTME: Represents a window on the desktop
  */
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 
 import { Button } from "@/components/Button";
 import { Typography } from "@/components/Typography";
@@ -16,31 +15,22 @@ import { HomeWindowDivider } from "@/components/HomeWindowDivider";
 import { HomeWindowMarquee } from "@/components/HomeWindowMarquee";
 import { HomeWindowToolbar } from "@/components/HomeWindowToolbar";
 
-type HomeWindowProps = {
-  position: { x: number; y: number };
-};
-
-const HomeWindow = ({ position }: HomeWindowProps) => {
+const HomeWindow = () => {
   const t = useTranslations();
-
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: WINDOW_ID });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    // left: `${position.x}px`,
-    // top: `${position.y}px`,
-  };
 
   const renderers = {
     color: (chunks: ReactNode) => <span className="text-cyan-500">{chunks}</span>,
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="absolute bg-beige-100 outline outline-blue-400">
-      <HomeWindowToolbar listeners={listeners} attributes={attributes} />
+    <div className="absolute left-64 top-16 bg-beige-100 outline outline-blue-400">
+      <HomeWindowToolbar />
 
       <div className="flex flex-col w-xl gap-16 px-8 py-24">
-        <SvgIconLogo className="w-44 mx-auto" />
+        <Link href="/">
+          <SvgIconLogo className="w-44 mx-auto" />
+        </Link>
+
         <Typography variant="title">{t.rich("desktop.window.description", renderers)}</Typography>
 
         <div className="flex flex-col items-center gap-12 max-w-full">
