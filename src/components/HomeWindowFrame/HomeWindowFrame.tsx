@@ -12,12 +12,7 @@ import { SvgIconFrame } from "@/components/SvgIcon";
 
 const HomeWindowFrame = () => {
   return (
-    <motion.div
-      className="mt-1"
-      initial="hidden"
-      whileInView="visible"
-      viewport={frameFadeIn.viewport}
-    >
+    <motion.div className="mt-1" initial="hidden" whileInView="visible" viewport={frameFadeIn.viewport}>
       <motion.div
         variants={frameFadeIn.variants}
         transition={frameFadeIn.transition}

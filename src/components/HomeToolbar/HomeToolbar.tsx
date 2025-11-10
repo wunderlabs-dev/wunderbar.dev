@@ -6,11 +6,7 @@ import { useWindowState } from "@/contexts/WindowProvider";
 
 import { Button } from "@/components/Button";
 import { Typography } from "@/components/Typography";
-import {
-  SvgIconWunderlabs,
-  SvgIconChat,
-  SvgIconFolderXs,
-} from "@/components/SvgIcon";
+import { SvgIconWunderlabs, SvgIconChat, SvgIconFolderXs } from "@/components/SvgIcon";
 
 import { HomeToolbarClock } from "@/components/HomeToolbar";
 
@@ -37,10 +33,7 @@ const HomeToolbar = () => {
           </Typography>
         </Button>
         <Link href={MAILTO_ADDRESS}>
-          <Button
-            endAdornment={<SvgIconChat size="small" />}
-            className="border-y-0"
-          >
+          <Button endAdornment={<SvgIconChat size="small" />} className="border-y-0">
             <Typography variant="body2" uppercase>
               {t("toolbar.letsTalk")}
             </Typography>

@@ -3,7 +3,7 @@
  * ABOUTME: Supports body1, body2, caption, and title variants with color options
  */
 
-import { type HTMLAttributes, type ReactNode } from "react";
+import React, { type HTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "@/utils/helpers";
 
@@ -49,7 +49,7 @@ const Typography = ({
   children,
   ...props
 }: TypographyProps) => {
-  const Component = typographyVariantMapping[variant];
+  const Component = typographyVariantMapping[variant] as React.ElementType;
 
   return (
     <Component

@@ -23,6 +23,7 @@ const HomeWindow = ({ position }: HomeWindowProps) => {
   const t = useTranslations();
 
   const { size } = useWindowState();
+
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: t("desktop.window.title"),
   });
@@ -40,24 +41,14 @@ const HomeWindow = ({ position }: HomeWindowProps) => {
         exit={windowClipPath.exit}
         className="absolute bg-beige-100 border border-blue-400"
       >
-        <div
-          className={cn(
-            "bg-beige-100 w-window flex flex-col",
-            size === "ENLARGED" ? "h-window-2xl" : "h-window",
-          )}
-        >
+        <div className={cn("bg-beige-100 w-window flex flex-col", size === "ENLARGED" ? "h-window-2xl" : "h-window")}>
           <HomeWindowToolbar listeners={listeners} attributes={attributes} />
           <HomeWindowContent />
         </div>
       </motion.div>
 
       <DragOverlay dropAnimation={drop}>
-        <div
-          className={cn(
-            "border border-blue-400 w-window",
-            size === "ENLARGED" ? "h-window-2xl" : "h-window",
-          )}
-        />
+        <div className={cn("border border-blue-400 w-window", size === "ENLARGED" ? "h-window-2xl" : "h-window")} />
       </DragOverlay>
     </>
   );

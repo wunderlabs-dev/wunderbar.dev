@@ -7,11 +7,7 @@ type SvgIconFrameProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconFrame = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconFrameProps) => {
+const SvgIconFrame = ({ className, size = "inherit", ...props }: SvgIconFrameProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
       <rect x="3.3" y="11.3" fill="#090D56" width="1.3" height="1.3" />

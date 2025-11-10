@@ -26,11 +26,7 @@ const HomeFolder = () => {
       className="flex flex-col items-center justify-center gap-1 py-1 px-2 cursor-pointer"
       onClick={() => setState("OPEN")}
     >
-      {hover || state === "OPEN" ? (
-        <SvgIconFolderOpen size="large" />
-      ) : (
-        <SvgIconFolder size="large" />
-      )}
+      {hover || state === "OPEN" ? <SvgIconFolderOpen size="large" /> : <SvgIconFolder size="large" />}
 
       <Typography variant="body2" uppercase>
         {t("wunder")}

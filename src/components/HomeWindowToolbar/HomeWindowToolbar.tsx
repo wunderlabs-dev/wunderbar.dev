@@ -8,12 +8,7 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 import { useWindowState } from "@/contexts/WindowProvider";
 
-import {
-  SvgIconX,
-  SvgIconExpand,
-  SvgIconMinimize,
-  SvgIconShrink,
-} from "@/components/SvgIcon";
+import { SvgIconX, SvgIconExpand, SvgIconMinimize, SvgIconShrink } from "@/components/SvgIcon";
 
 import { Button } from "@/components/Button";
 import { Typography } from "@/components/Typography";
@@ -23,10 +18,7 @@ type HomeWindowToolbarProps = {
   listeners?: SyntheticListenerMap;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const HomeWindowToolbar = ({
-  listeners,
-  attributes,
-}: HomeWindowToolbarProps) => {
+const HomeWindowToolbar = ({ listeners, attributes }: HomeWindowToolbarProps) => {
   const t = useTranslations();
 
   const { size, setState, setSize } = useWindowState();
@@ -53,16 +45,9 @@ const HomeWindowToolbar = ({
         {t("desktop.window.title")}
       </Typography>
 
-      <div
-        className="flex items-center gap-1"
-        onPointerDown={handlePointerDown}
-      >
+      <div className="flex items-center gap-1" onPointerDown={handlePointerDown}>
         <Button variant="transparent" onClick={handleSizeClick}>
-          {size === "DEFAULT" ? (
-            <SvgIconExpand size="small" />
-          ) : (
-            <SvgIconShrink size="small" />
-          )}
+          {size === "DEFAULT" ? <SvgIconExpand size="small" /> : <SvgIconShrink size="small" />}
         </Button>
         <Button variant="transparent" onClick={() => setState("CLOSED")}>
           <SvgIconMinimize size="small" />
