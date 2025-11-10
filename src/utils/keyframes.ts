@@ -7,7 +7,24 @@ export const drop = {
   duration: 0,
 };
 
-export const frame = {
+export const windowClipPath = {
+  exit: {
+    clipPath: [
+      "inset(0% 0% 0% 0%)",
+      "inset(0% 0% 0% 0%)",
+      "inset(33% 0% 0% 0%)",
+      "inset(33% 0% 0% 0%)",
+      "inset(66% 0% 0% 0%)",
+      "inset(66% 0% 0% 0%)",
+    ],
+  },
+  transition: {
+    duration: 0.15,
+    times: [0, 0.32, 0.33, 0.65, 0.66, 1],
+  },
+};
+
+export const frameFadeIn = {
   viewport: {
     once: true,
   },
@@ -25,7 +42,7 @@ export const frame = {
   },
 };
 
-export const clipPath = {
+export const frameClipPath = {
   variants: {
     hidden: {
       display: "none",

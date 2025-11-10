@@ -5,9 +5,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 import { useDraggable, DragOverlay } from "@dnd-kit/core";
 
-import { drop } from "@/utils/keyframes";
+import { drop, windowClipPath } from "@/utils/keyframes";
 import { cn, cssToUnit } from "@/utils/helpers";
 import { useWindowState } from "@/contexts/WindowProvider";
 
@@ -26,24 +27,26 @@ const HomeWindow = ({ position }: HomeWindowProps) => {
 
   return (
     <>
-      <div
+      <motion.div
         ref={setNodeRef}
         style={{
           top: cssToUnit(position.y),
           left: cssToUnit(position.x),
         }}
-        className="absolute bg-beige-100 outline outline-blue-400"
+        exit={windowClipPath.exit}
+        transition={windowClipPath.transition}
+        className="absolute bg-beige-100 border border-blue-400"
       >
         <div
           className={cn(
-            "bg-beige-100 outline outline-blue-400 w-window flex flex-col",
+            "bg-beige-100 border-b border-blue-400 w-window flex flex-col",
             size === "ENLARGED" ? "h-window-2xl" : "h-window"
           )}
         >
           <HomeWindowToolbar listeners={listeners} attributes={attributes} />
           <HomeWindowContent />
         </div>
-      </div>
+      </motion.div>
 
       <DragOverlay dropAnimation={drop}>
         <div className={cn("border border-blue-400 w-window", size === "ENLARGED" ? "h-window-2xl" : "h-window")} />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import type { GetStaticProps } from "next";
+import { AnimatePresence } from "framer-motion";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 import copy from "@/copy/en-EN.json";
@@ -41,7 +42,9 @@ const Home = () => {
         <DndContext onDragEnd={handleDragEnd}>
           <main className="flex flex-1 items-end justify-start gap-4 px-12 py-12">
             <HomeFolder />
-            {state === "OPEN" ? <HomeWindow position={position} /> : null}
+            <AnimatePresence>
+              {state === "OPEN" ? <HomeWindow position={position} /> : null}
+            </AnimatePresence>
           </main>
         </DndContext>
 
