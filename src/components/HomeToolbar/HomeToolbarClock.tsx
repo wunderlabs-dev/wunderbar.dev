@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useInterval } from "usehooks-ts";
 import { format } from "date-fns";
 
-import { ONE_SEC_IN_MS } from "@/utils/helpers";
+import { ONE_SEC_IN_MS } from "@/utils/const";
 
 import { Typography } from "@/components/Typography";
 
