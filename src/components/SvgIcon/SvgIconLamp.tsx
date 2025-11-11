@@ -12,11 +12,7 @@ type SvgIconLampProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconLamp = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconLampProps) => {
+const SvgIconLamp = ({ className, size = "inherit", ...props }: SvgIconLampProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
       <polygon points="9,0 7,0 5,0 5,2 7,2 9,2 11,2 11,0" />

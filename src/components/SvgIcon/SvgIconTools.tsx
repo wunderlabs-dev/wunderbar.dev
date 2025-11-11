@@ -12,11 +12,7 @@ type SvgIconToolsProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconTools = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconToolsProps) => {
+const SvgIconTools = ({ className, size = "inherit", ...props }: SvgIconToolsProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
       <polygon points="8,3 10,3 10,1 8,1 6,1 4,1 4,3 6,3" />

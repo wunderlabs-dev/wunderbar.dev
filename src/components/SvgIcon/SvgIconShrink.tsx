@@ -12,11 +12,7 @@ type SvgIconShrinkProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconShrink = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconShrinkProps) => {
+const SvgIconShrink = ({ className, size = "inherit", ...props }: SvgIconShrinkProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
       <polygon points="10.9,4.9 10.9,2.9 8.9,2.9 8.9,4.9 8.9,6.9 10.9,6.9 12.9,6.9 12.9,4.9" />

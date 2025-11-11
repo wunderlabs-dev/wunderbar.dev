@@ -7,11 +7,7 @@ type SvgIconFolderOpenProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconFolderOpen = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconFolderOpenProps) => {
+const SvgIconFolderOpen = ({ className, size = "inherit", ...props }: SvgIconFolderOpenProps) => {
   return (
     <SvgIcon className={className} size={size} viewBox="0 0 64 64" {...props}>
       <g>

@@ -7,9 +7,7 @@ export const cn = (...inputs: Parameters<typeof cx>) => {
   return twMerge(cx(...inputs));
 };
 
-export const isNullOrUndefined = <T>(
-  value: T | null | undefined,
-): value is null | undefined => {
+export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
   return value === null || value === undefined;
 };
 

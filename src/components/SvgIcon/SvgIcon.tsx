@@ -18,20 +18,9 @@ const svgIconSizeClassNames: SvgIconSizeMapping = {
   large: "w-16 h-16",
 } as const;
 
-const SvgIcon = ({
-  children,
-  className,
-  size = "inherit",
-  viewBox = "0 0 16 16",
-  ...props
-}: SvgIconProps) => {
+const SvgIcon = ({ children, className, size = "inherit", viewBox = "0 0 16 16", ...props }: SvgIconProps) => {
   return (
-    <svg
-      viewBox={viewBox}
-      fill="currentColor"
-      className={cn(svgIconSizeClassNames[size], className)}
-      {...props}
-    >
+    <svg viewBox={viewBox} fill="currentColor" className={cn(svgIconSizeClassNames[size], className)} {...props}>
       {children}
     </svg>
   );

@@ -12,11 +12,7 @@ type SvgIconFlashProps = {
   className?: HTMLAttributes<SVGSVGElement>["className"];
 } & HTMLAttributes<SVGSVGElement>;
 
-const SvgIconFlash = ({
-  className,
-  size = "inherit",
-  ...props
-}: SvgIconFlashProps) => {
+const SvgIconFlash = ({ className, size = "inherit", ...props }: SvgIconFlashProps) => {
   return (
     <SvgIcon className={className} size={size} {...props}>
       <rect x="11" y="9" width="2" height="2" />

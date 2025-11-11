@@ -24,13 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <NextIntlClientProvider locale="en-EN" messages={pageProps.messages}>
       <WindowProvider>
-        <div
-          className={cn(
-            handjet.variable,
-            spaceGrotesk.variable,
-            "font-space-grotesk text-blue-900",
-          )}
-        >
+        <div className={cn(handjet.variable, spaceGrotesk.variable, "font-space-grotesk text-blue-900")}>
           <Component {...pageProps} />
         </div>
       </WindowProvider>
