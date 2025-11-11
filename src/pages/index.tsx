@@ -45,7 +45,7 @@ const Home = () => {
       </Head>
 
       {client ? (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex flex-col md:min-h-screen">
           <DndContext onDragEnd={handleDragEnd}>
             {md ? (
               <main className="flex flex-1">
