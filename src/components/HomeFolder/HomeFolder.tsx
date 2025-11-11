@@ -20,11 +20,26 @@ const HomeFolder = () => {
   const ref = useRef<HTMLDivElement>(null as never);
   const hover = useHover<HTMLDivElement>(ref);
 
+  const handleClick = () => {
+    setState("OPEN");
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setState("OPEN");
+    }
+  };
+
   return (
     <div
       ref={ref}
+      role="button"
+      tabIndex={0}
+      aria-label={t("aria.openFolder", { folder: t("wunder") })}
       className="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 py-1"
-      onClick={() => setState("OPEN")}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       {hover || state === "OPEN" ? <SvgIconFolderOpen size="large" /> : <SvgIconFolder size="large" />}
 

@@ -20,5 +20,14 @@
   },
   "toolbar": {
     "letsTalk": "Let's talk !"
+  },
+  "aria": {
+    "expandWindow": "Expand window",
+    "shrinkWindow": "Shrink window",
+    "minimizeWindow": "Minimize window",
+    "closeWindow": "Close window",
+    "goToHomePage": "Go to home page",
+    "contactUs": "Contact us",
+    "openFolder": "Open {folder} folder"
   }
 }

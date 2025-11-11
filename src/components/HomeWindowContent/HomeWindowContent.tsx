@@ -20,7 +20,7 @@ const HomeWindowContent = () => {
 
   return (
     <div className="flex flex-col gap-12 overflow-y-auto px-4 py-12 md:gap-16 md:px-8 md:py-24">
-      <Link href="/">
+      <Link href="/" aria-label={t("aria.goToHomePage")}>
         <SvgIconLogo className="mx-auto w-44" />
       </Link>
 
@@ -36,7 +36,7 @@ const HomeWindowContent = () => {
           <HomeWindowDivider />
         </div>
 
-        <Link href={MAILTO_ADDRESS}>
+        <Link href={MAILTO_ADDRESS} aria-label={t("aria.contactUs")}>
           <Button endAdornment={<SvgIconChat size="small" />}>
             <Typography variant="body2" uppercase>
               {t("toolbar.letsTalk")}
