@@ -24,12 +24,12 @@ const HomeToolbar = () => {
       </div>
 
       <div className="col-span-6 flex justify-center">
-        <Button startAdornment={startAdornment} className="border-y-0 border-r-0" onClick={() => setState("OPEN")} aria-label={t("aria.openFolder", { folder: t("desktop.folder.wunder") })}>
+        <Button startAdornment={startAdornment} className="border-y-0 border-r-0" onClick={() => setState("OPEN")}>
           <Typography variant="body2" uppercase>
             {t("desktop.folder.wunder")}
           </Typography>
         </Button>
-        <Link href={MAILTO_ADDRESS} aria-label={t("aria.contactUs")}>
+        <Link href={MAILTO_ADDRESS}>
           <Button endAdornment={<SvgIconChat size="small" />} className="border-y-0">
             <Typography variant="body2" uppercase>
               {t("toolbar.letsTalk")}

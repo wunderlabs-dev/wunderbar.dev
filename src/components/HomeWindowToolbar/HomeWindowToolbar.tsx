@@ -46,13 +46,13 @@ const HomeWindowToolbar = ({ listeners, attributes }: HomeWindowToolbarProps) =>
       </Typography>
 
       <div className="flex items-center gap-1" onPointerDown={handlePointerDown}>
-        <Button variant="transparent" onClick={handleSizeClick} aria-label={t(size === "DEFAULT" ? "aria.expandWindow" : "aria.shrinkWindow")}>
+        <Button variant="transparent" onClick={handleSizeClick}>
           {size === "DEFAULT" ? <SvgIconExpand size="small" /> : <SvgIconShrink size="small" />}
         </Button>
-        <Button variant="transparent" onClick={() => setState("CLOSED")} aria-label={t("aria.minimizeWindow")}>
+        <Button variant="transparent" onClick={() => setState("CLOSED")}>
           <SvgIconMinimize size="small" />
         </Button>
-        <Button variant="transparent" onClick={() => setState("CLOSED")} aria-label={t("aria.closeWindow")}>
+        <Button variant="transparent" onClick={() => setState("CLOSED")}>
           <SvgIconX size="small" />
         </Button>
       </div>
