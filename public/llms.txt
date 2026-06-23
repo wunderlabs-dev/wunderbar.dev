@@ -7,7 +7,7 @@ W/underlabs is a software lab focused on infrastructure, reliability, and agent 
 ## Pages
 
 - [Home](https://wunderlabs.dev/): Overview of W/underlabs, current focus areas, projects, community, and contact information.
-- [Agents](https://wunderlabs.dev/agents/): Placeholder page for agent-oriented content.
+- [Agent brief](https://wunderlabs.dev/#agents): Compact operating brief for AI agents, crawlers, and automated assistants.
 
 ## Projects
 
