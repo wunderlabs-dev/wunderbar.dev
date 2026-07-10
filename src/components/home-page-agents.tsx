@@ -12,7 +12,7 @@ const HomePageAgents = ({ className, ...props }: HomePageAgentsProps) => {
     <div
       id="agents"
       className={cn(
-        "absolute inset-0 z-0 overflow-y-auto bg-gray-400 px-6 py-12 font-mono text-sm leading-5 text-gray-100 selection:bg-white selection:text-gray-400 md:px-12 md:py-24",
+        "absolute inset-0 overflow-y-auto bg-gray-400 px-6 py-12 font-mono text-sm leading-5 text-gray-100 selection:bg-white selection:text-gray-400 md:px-12 md:py-24",
         className,
       )}
       {...props}
