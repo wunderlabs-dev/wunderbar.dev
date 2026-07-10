@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 
 export const HomePageCurtainStates = {
-  canvas: "canvas",
+  capturing: "capturing",
   closed: "closed",
+  falling: "falling",
   revealed: "revealed",
 } as const;
 

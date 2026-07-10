@@ -65,23 +65,43 @@ const createViewportCapture = (site: HTMLElement, width: number, height: number,
   return source;
 };
 
+const prepareCanvas = (canvas: LayoutSubtreeCanvas, site: HTMLElement, scrollOffset: number) => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const devicePixelRatio = Math.min(window.devicePixelRatio, MAX_DEVICE_PIXEL_RATIO);
+  const source = createViewportCapture(site, width, height, scrollOffset);
+  const supportsLayoutSubtree = "layoutSubtree" in canvas;
+
+  canvas.width = Math.round(width * devicePixelRatio);
+  canvas.height = Math.round(height * devicePixelRatio);
+
+  if (supportsLayoutSubtree) {
+    canvas.layoutSubtree = supportsLayoutSubtree;
+  }
+
+  canvas.append(source);
+
+  return { height, source, width };
+};
+
 const HomePageCurtain = ({ children, underlay }: HomePageCurtainProps) => {
   const { supported: isHtmlInCanvasSupported } = useHtmlInCanvasSupport();
   const [curtainState, setCurtainState] = useState<HomePageCurtainState>(HomePageCurtainStates.closed);
-  const [isSiteHidden, setIsSiteHidden] = useState(false);
   const captureRef = useRef(INITIAL_CAPTURE);
   const siteRef = useRef<HTMLDivElement>(null);
   const underlayRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const isCanvasActive = curtainState === HomePageCurtainStates.canvas;
+  const isCapturing = curtainState === HomePageCurtainStates.capturing;
+  const isFalling = curtainState === HomePageCurtainStates.falling;
   const isClosed = curtainState === HomePageCurtainStates.closed;
   const isRevealed = curtainState === HomePageCurtainStates.revealed;
+  const isCanvasActive = isCapturing || isFalling;
+  const isSiteHidden = isFalling || isRevealed;
   const hasRevealStarted = not(isClosed);
   const isUnderlayHidden = not(isRevealed);
 
   const completeReveal = useCallback(() => {
-    setIsSiteHidden(true);
     setCurtainState(HomePageCurtainStates.revealed);
   }, []);
 
@@ -99,7 +119,7 @@ const HomePageCurtain = ({ children, underlay }: HomePageCurtainProps) => {
       document.documentElement.classList.add("overflow-hidden");
 
       if (isHtmlInCanvasSupported) {
-        setCurtainState(HomePageCurtainStates.canvas);
+        setCurtainState(HomePageCurtainStates.capturing);
         return;
       }
 
@@ -127,29 +147,21 @@ const HomePageCurtain = ({ children, underlay }: HomePageCurtainProps) => {
       return;
     }
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const devicePixelRatio = Math.min(window.devicePixelRatio, MAX_DEVICE_PIXEL_RATIO);
-    const source = createViewportCapture(site, width, height, captureRef.current.scrollOffset);
+    const { height, source, width } = prepareCanvas(canvas, site, captureRef.current.scrollOffset);
 
-    canvas.width = Math.round(width * devicePixelRatio);
-    canvas.height = Math.round(height * devicePixelRatio);
-    canvas.layoutSubtree = true;
-    canvas.append(source);
-
-    const dispose = startWebGlCurtain({
+    const disposeCurtain = startWebGlCurtain({
       canvas,
       clickX: captureRef.current.clickX,
       height,
       onComplete: completeReveal,
       onFailure: completeReveal,
-      onReady: () => setIsSiteHidden(true),
+      onReady: () => setCurtainState(HomePageCurtainStates.falling),
       source,
       width,
     });
 
     return () => {
-      dispose();
+      disposeCurtain();
       canvas.replaceChildren();
     };
   }, [completeReveal, isCanvasActive]);

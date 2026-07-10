@@ -142,20 +142,18 @@ type ClothMesh = {
   textureCoordinates: Float32Array;
 };
 
-type ShaderResources = {
-  fragmentShader: WebGLShader;
-  program: WebGLProgram;
-  vertexShader: WebGLShader;
+type CurtainBuffers = {
+  indices: WebGLBuffer;
+  positions: WebGLBuffer;
+  shades: WebGLBuffer;
+  textureCoordinates: WebGLBuffer;
 };
 
 type CurtainRenderer = {
+  buffers: CurtainBuffers;
   gl: ElementImageWebGL2Context;
-  indexBuffer: WebGLBuffer;
-  positionBuffer: WebGLBuffer;
-  shadeBuffer: WebGLBuffer;
-  shaders: ShaderResources;
+  program: WebGLProgram;
   texture: WebGLTexture;
-  textureCoordinateBuffer: WebGLBuffer;
   uniforms: {
     offset: WebGLUniformLocation | null;
     resolution: WebGLUniformLocation | null;
@@ -482,40 +480,48 @@ const compileShader = (gl: WebGL2RenderingContext, type: number, source: string)
   return shader;
 };
 
-const createShaderProgram = (gl: WebGL2RenderingContext): ShaderResources => {
-  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
-  let fragmentShader: WebGLShader;
+const createShaderProgram = (gl: WebGL2RenderingContext) => {
+  const shaders: WebGLShader[] = [];
+  let program: WebGLProgram | null = null;
+  let isLinked = false;
 
   try {
-    fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SOURCE);
-  } catch (error) {
-    gl.deleteShader(vertexShader);
-    throw error;
-  }
+    const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
+    shaders.push(vertexShader);
 
-  const program = gl.createProgram();
+    const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SOURCE);
+    shaders.push(fragmentShader);
 
-  try {
+    program = gl.createProgram();
+
     if (program === null) {
       throw new Error("Unable to create curtain shader program.");
     }
 
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
+    for (const shader of shaders) {
+      gl.attachShader(program, shader);
+    }
+
     gl.linkProgram(program);
 
-    const isLinked = Boolean(gl.getProgramParameter(program, gl.LINK_STATUS));
+    isLinked = Boolean(gl.getProgramParameter(program, gl.LINK_STATUS));
 
     if (not(isLinked)) {
       throw new Error(gl.getProgramInfoLog(program) ?? "Unable to link curtain shader program.");
     }
 
-    return { fragmentShader, program, vertexShader };
+    return program;
   } catch (error) {
     gl.deleteProgram(program);
-    gl.deleteShader(vertexShader);
-    gl.deleteShader(fragmentShader);
     throw error;
+  } finally {
+    for (const shader of shaders) {
+      if (program !== null && isLinked) {
+        gl.detachShader(program, shader);
+      }
+
+      gl.deleteShader(shader);
+    }
   }
 };
 
@@ -549,25 +555,11 @@ const uploadElementTexture = (gl: ElementImageWebGL2Context, source: HTMLElement
   throw new Error("HTML element textures are not available in WebGL.");
 };
 
-const destroyRenderer = (renderer: CurtainRenderer) => {
-  const { gl, shaders } = renderer;
-
-  gl.deleteBuffer(renderer.positionBuffer);
-  gl.deleteBuffer(renderer.textureCoordinateBuffer);
-  gl.deleteBuffer(renderer.shadeBuffer);
-  gl.deleteBuffer(renderer.indexBuffer);
-  gl.deleteTexture(renderer.texture);
-  gl.deleteVertexArray(renderer.vertexArray);
-  gl.deleteProgram(shaders.program);
-  gl.deleteShader(shaders.vertexShader);
-  gl.deleteShader(shaders.fragmentShader);
-};
-
-const createCurtainRenderer = (canvas: HTMLCanvasElement, source: HTMLElement, mesh: ClothMesh): CurtainRenderer => {
+const getElementImageContext = (canvas: HTMLCanvasElement) => {
   const gl = canvas.getContext("webgl2", WEB_GL_CONTEXT_OPTIONS) as ElementImageWebGL2Context | null;
 
   if (gl === null) {
-    throw new Error("HTML element textures are not available in WebGL.");
+    throw new Error("Unable to create a WebGL 2 context.");
   }
 
   const supportsElementTextures = isFunction(gl.texElementImage2D) || isFunction(gl.texElement2D);
@@ -576,113 +568,145 @@ const createCurtainRenderer = (canvas: HTMLCanvasElement, source: HTMLElement, m
     throw new Error("HTML element textures are not available in WebGL.");
   }
 
-  let shaders: ShaderResources | null = null;
+  return gl;
+};
+
+const bindFloatAttribute = (
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram,
+  name: string,
+  buffer: WebGLBuffer,
+  data: Float32Array,
+  size: number,
+  usage: number,
+) => {
+  const location = gl.getAttribLocation(program, name);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, data, usage);
+  gl.enableVertexAttribArray(location);
+  gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+};
+
+const configureElementTexture = (
+  gl: ElementImageWebGL2Context,
+  texture: WebGLTexture,
+  source: HTMLElement,
+  width: number,
+  height: number,
+) => {
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  uploadElementTexture(gl, source, width, height);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+};
+
+const destroyRenderer = (renderer: CurtainRenderer) => {
+  const { gl } = renderer;
+
+  for (const buffer of Object.values(renderer.buffers)) {
+    gl.deleteBuffer(buffer);
+  }
+
+  gl.deleteTexture(renderer.texture);
+  gl.deleteVertexArray(renderer.vertexArray);
+  gl.deleteProgram(renderer.program);
+};
+
+const createCurtainRenderer = (canvas: HTMLCanvasElement, source: HTMLElement, mesh: ClothMesh): CurtainRenderer => {
+  const gl = getElementImageContext(canvas);
+  const allocatedBuffers: WebGLBuffer[] = [];
+  let program: WebGLProgram | null = null;
   let vertexArray: WebGLVertexArrayObject | null = null;
-  let positionBuffer: WebGLBuffer | null = null;
-  let textureCoordinateBuffer: WebGLBuffer | null = null;
-  let shadeBuffer: WebGLBuffer | null = null;
-  let indexBuffer: WebGLBuffer | null = null;
   let texture: WebGLTexture | null = null;
 
   try {
-    shaders = createShaderProgram(gl);
+    program = createShaderProgram(gl);
     vertexArray = gl.createVertexArray();
-    positionBuffer = createBuffer(gl);
-    textureCoordinateBuffer = createBuffer(gl);
-    shadeBuffer = createBuffer(gl);
-    indexBuffer = createBuffer(gl);
     texture = gl.createTexture();
 
     if (vertexArray === null || texture === null) {
       throw new Error("Unable to create curtain WebGL resources.");
     }
 
+    const allocateBuffer = () => {
+      const buffer = createBuffer(gl);
+      allocatedBuffers.push(buffer);
+      return buffer;
+    };
+    const buffers: CurtainBuffers = {
+      indices: allocateBuffer(),
+      positions: allocateBuffer(),
+      shades: allocateBuffer(),
+      textureCoordinates: allocateBuffer(),
+    };
+
     gl.bindVertexArray(vertexArray);
-    gl.useProgram(shaders.program);
-
-    const positionLocation = gl.getAttribLocation(shaders.program, "aPosition");
-    const textureCoordinateLocation = gl.getAttribLocation(shaders.program, "aTextureCoordinate");
-    const shadeLocation = gl.getAttribLocation(shaders.program, "aShade");
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.positions, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordinateBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.textureCoordinates, gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(textureCoordinateLocation);
-    gl.vertexAttribPointer(textureCoordinateLocation, 2, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, shadeBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, mesh.shades, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(shadeLocation);
-    gl.vertexAttribPointer(shadeLocation, 1, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    uploadElementTexture(gl, source, canvas.width, canvas.height);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.useProgram(program);
+    bindFloatAttribute(gl, program, "aPosition", buffers.positions, mesh.positions, 2, gl.DYNAMIC_DRAW);
+    bindFloatAttribute(
+      gl,
+      program,
+      "aTextureCoordinate",
+      buffers.textureCoordinates,
+      mesh.textureCoordinates,
+      2,
+      gl.STATIC_DRAW,
+    );
+    bindFloatAttribute(gl, program, "aShade", buffers.shades, mesh.shades, 1, gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
+    configureElementTexture(gl, texture, source, canvas.width, canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     return {
+      buffers,
       gl,
-      indexBuffer,
-      positionBuffer,
-      shadeBuffer,
-      shaders,
+      program,
       texture,
-      textureCoordinateBuffer,
       uniforms: {
-        offset: gl.getUniformLocation(shaders.program, "uOffset"),
-        resolution: gl.getUniformLocation(shaders.program, "uResolution"),
-        shadowPass: gl.getUniformLocation(shaders.program, "uShadowPass"),
-        texture: gl.getUniformLocation(shaders.program, "uTexture"),
+        offset: gl.getUniformLocation(program, "uOffset"),
+        resolution: gl.getUniformLocation(program, "uResolution"),
+        shadowPass: gl.getUniformLocation(program, "uShadowPass"),
+        texture: gl.getUniformLocation(program, "uTexture"),
       },
       vertexArray,
     };
   } catch (error) {
-    gl.deleteBuffer(positionBuffer);
-    gl.deleteBuffer(textureCoordinateBuffer);
-    gl.deleteBuffer(shadeBuffer);
-    gl.deleteBuffer(indexBuffer);
+    for (const buffer of allocatedBuffers) {
+      gl.deleteBuffer(buffer);
+    }
+
     gl.deleteTexture(texture);
     gl.deleteVertexArray(vertexArray);
-
-    if (shaders !== null) {
-      gl.deleteProgram(shaders.program);
-      gl.deleteShader(shaders.vertexShader);
-      gl.deleteShader(shaders.fragmentShader);
-    }
+    gl.deleteProgram(program);
 
     throw error;
   }
 };
 
 const renderCurtain = (renderer: CurtainRenderer, mesh: ClothMesh, width: number, height: number, elapsed: number) => {
-  const { gl, shaders, uniforms } = renderer;
+  const { buffers, gl, program, uniforms } = renderer;
   const visibleIndices = createVisibleIndices(mesh);
 
   updateRenderedPositions(mesh, elapsed);
   updateShades(mesh);
 
   gl.bindVertexArray(renderer.vertexArray);
-  gl.bindBuffer(gl.ARRAY_BUFFER, renderer.positionBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positions);
   gl.bufferData(gl.ARRAY_BUFFER, mesh.renderedPositions, gl.DYNAMIC_DRAW);
-  gl.bindBuffer(gl.ARRAY_BUFFER, renderer.shadeBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.shades);
   gl.bufferData(gl.ARRAY_BUFFER, mesh.shades, gl.DYNAMIC_DRAW);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, renderer.indexBuffer);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, visibleIndices, gl.DYNAMIC_DRAW);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.useProgram(shaders.program);
+  gl.useProgram(program);
   gl.uniform2f(uniforms.resolution, width, height);
   gl.uniform1i(uniforms.texture, 0);
 
@@ -720,7 +744,7 @@ const startWebGlCurtain = ({
   };
 
   function removeListeners() {
-    canvas.removeEventListener("paint", handlePaint);
+    canvas.removeEventListener("paint", begin);
     canvas.removeEventListener("webglcontextlost", handleContextLost);
   }
 
@@ -745,22 +769,21 @@ const startWebGlCurtain = ({
     }
   }
 
-  function complete() {
+  function settle(callback: () => void) {
     if (runtime.disposed) {
       return;
     }
 
     dispose();
-    onComplete();
+    callback();
+  }
+
+  function complete() {
+    settle(onComplete);
   }
 
   function fail() {
-    if (runtime.disposed) {
-      return;
-    }
-
-    dispose();
-    onFailure();
+    settle(onFailure);
   }
 
   function renderFrame(time: number) {
@@ -807,16 +830,12 @@ const startWebGlCurtain = ({
     }
   }
 
-  function handlePaint() {
-    begin();
-  }
-
   function handleContextLost(event: Event) {
     event.preventDefault();
     fail();
   }
 
-  canvas.addEventListener("paint", handlePaint);
+  canvas.addEventListener("paint", begin);
   canvas.addEventListener("webglcontextlost", handleContextLost);
   runtime.setupTimeout = window.setTimeout(fail, LIFECYCLE.setupDuration);
 
